@@ -101,7 +101,7 @@ class ThermostatController(hass.Hass):
                 update_valve_same_value = valve_position != self.last_valve_position
 
         if update_valve_same_value:
-            self.entity_valve_position.set_state(state=valve_position)
+            self.entity_valve_position.call_service("set_value", value=valve_position)
             self.last_valve_position = valve_position
             self.log(f"New valve position: {valve_position}")
         else:
