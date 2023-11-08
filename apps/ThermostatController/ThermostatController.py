@@ -82,7 +82,7 @@ class ThermostatController(hass.Hass):
 
 
     def get_valve_position(self, target_temp, current_temp, hvac_mode):
-        difference = (target_temp - current_temp)|round(1) # How many degrees need to be heated
+        difference = round((target_temp - current_temp), 1) # How many degrees need to be heated
         self.log(f"Valve position calculation: Temp difference: {difference}")
 
         if self.temp_values is None:
