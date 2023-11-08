@@ -49,6 +49,7 @@ class ThermostatController(hass.Hass):
             return
 
         # Init values
+        hvac_mode = self.entity_thermostat.get_state()
         current_temp = self.entity_thermostat.get_state(attribute="current_temperature")
         target_temp = self.entity_thermostat.get_state(attribute="temperature")
         difference_last_temp = abs(current_temp - self.last_current_temp)
@@ -59,7 +60,7 @@ class ThermostatController(hass.Hass):
                 #self.log("Not updating valve position (temperature difference too small)")
                 #return
 
-        valve_position = self.get_valve_position(target_temp, current_temp)
+        valve_position = self.get_valve_position(target_temp, current_temp, hvac_mode)
 
         update_valve_same_value = True
         if not self.valve_always_update:
@@ -80,12 +81,16 @@ class ThermostatController(hass.Hass):
         self.last_current_temp = current_temp
 
 
-    def get_valve_position(self, target_temp, current_temp):
-        difference = target_temp - current_temp # How many degrees need to be heated
+    def get_valve_position(self, target_temp, current_temp, hvac_mode):
+        difference = (target_temp - current_temp)|round(1) # How many degrees need to be heated
         self.log(f"Valve position calculation: Temp difference: {difference}")
 
         if self.temp_values is None:
             self.log("Temp values are undefined!")
+            return 0
+
+        # Check if hvac mode is heat - if not, close valve.
+        if hvac_mode != "heat":
             return 0
 
         values_len = len(self.temp_values) - 1
