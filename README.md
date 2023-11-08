@@ -11,7 +11,7 @@ You can specify custom values to define by with temp difference to target how mu
 <br><br>
 
 ## App configuration
-### Full Example:
+### Example
 ```yaml
 ThermostatController_living_room:
   module: ThermostatController
@@ -38,7 +38,7 @@ ThermostatController_living_room:
     - pos: 255 # All thresholds have been passed. Max heating.
 ```
 
-### Arguments
+### Parameters
 | key                     | required | type           | default | description                                                                                                                                                                                                                                                           |
 |-------------------------|----------|----------------|---------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `enabled`               | False    | bool or string | `True`  | Enable/Disable this instance. Value: Boolean or switch entity.                                                                                                                                                                                                        |
