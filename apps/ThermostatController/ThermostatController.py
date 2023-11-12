@@ -64,6 +64,8 @@ class ThermostatController(hass.Hass):
         #self.log(f"Attribute: {attribute} ")
         if attribute == "current_temperature":
             time_difference = current_time - self.last_temp_change
+            # TODO time difference not working properly
+            #      Time difference: -2.2649765014648438e-05
             self.log(f"Time difference: {time_difference}")
             if time_difference < self.trigger_timeout and difference_last_executed_temp < self.trigger_temp_diff:
                 self.log(f"Not updating valve position (temperature difference too small. Diff to last temp: {difference_last_executed_temp}. Required diff: {self.trigger_temp_diff})")
