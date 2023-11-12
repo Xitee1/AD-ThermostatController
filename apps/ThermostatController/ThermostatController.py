@@ -1,5 +1,5 @@
 import hassapi as hass
-import datetime
+import time
 
 class ThermostatController(hass.Hass):
     """
@@ -9,18 +9,19 @@ class ThermostatController(hass.Hass):
     def initialize(self):
         # Init
         self.log("Initializing ThermostatController..")
-        self.last_current_temp = 0
-        self.last_execution_time = datetime.datetime.now()
+        self.last_temp = 0
+        self.last_executed_temp = 0
+        self.last_execution_time = time.time()
+        self.last_temp_change = time.time()
         self.last_valve_position = None
-
-        # Config
-        #self.min_temp_difference = 0.2
 
         # Arguments
         self.enabled = self.args['enabled']
         self.entity_thermostat = self.get_entity(self.args['entity_thermostat'])
         self.entity_valve_position = self.get_entity(self.args['entity_valve_position'])
 
+        self.trigger_temp_diff = float(self.args['trigger_temp_diff']) if 'trigger_temp_diff' in self.args else 0.2
+        self.trigger_timeout = int(self.args['trigger_timeout']) if 'trigger_timeout' in self.args else 60 * 7
         self.update_interval = int(self.args['update_interval']) if 'update_interval' in self.args else -1
         self.temp_values = self.args['temp_values'] if 'temp_values' in self.args else None
         self.valve_compare_current_value = self.args['compare_current_value'] if 'compare_current_value' in self.args else True
@@ -52,13 +53,21 @@ class ThermostatController(hass.Hass):
         hvac_mode = self.entity_thermostat.get_state()
         current_temp = self.entity_thermostat.get_state(attribute="current_temperature")
         target_temp = self.entity_thermostat.get_state(attribute="temperature")
-        difference_last_temp = abs(current_temp - self.last_current_temp)
+        current_time = time.time()
+        difference_last_executed_temp = round(abs(current_temp - self.last_executed_temp), 1)
+
+        if self.last_temp != current_temp:
+            self.last_temp_change = time.time()
+        self.last_temp = current_temp
 
         # Check if temperature difference is too small (only if updated by current temp change)
-        #if attribute == "current_temperature":
-            #if difference_last_temp < self.min_temp_difference:
-                #self.log("Not updating valve position (temperature difference too small)")
-                #return
+        #self.log(f"Attribute: {attribute} ")
+        if attribute == "current_temperature":
+            time_difference = current_time - self.last_temp_change
+            self.log(f"Time difference: {time_difference}")
+            if time_difference < self.trigger_timeout and difference_last_executed_temp < self.trigger_temp_diff:
+                self.log(f"Not updating valve position (temperature difference too small. Diff to last temp: {difference_last_executed_temp}. Required diff: {self.trigger_temp_diff})")
+                return
 
         valve_position = self.get_valve_position(target_temp, current_temp, hvac_mode)
 
@@ -78,7 +87,8 @@ class ThermostatController(hass.Hass):
         else:
             self.log(f"Not updating valve position (already same value ({valve_position}))")
 
-        self.last_current_temp = current_temp
+        self.last_execution_time = current_time
+        self.last_executed_temp = current_temp
 
 
     def get_valve_position(self, target_temp, current_temp, hvac_mode):
