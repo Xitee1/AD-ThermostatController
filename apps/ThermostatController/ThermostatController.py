@@ -9,7 +9,6 @@ class ThermostatController(hass.Hass):
     def initialize(self):
         # Init
         self.log("Initializing ThermostatController..")
-        self.last_temp = 0
         self.last_executed_temp = 0
         self.last_execution_time = datetime.now()
         self.last_temp_change = datetime.now()
@@ -29,7 +28,7 @@ class ThermostatController(hass.Hass):
 
         # App
         if type(self.enabled) is bool and not self.enabled:
-            self.log("ThermostatController disabled.")
+            self.log("ThermostatController instance is disabled.")
             return
 
         if self.update_interval == -1:
@@ -56,15 +55,13 @@ class ThermostatController(hass.Hass):
         current_time = datetime.now()
         difference_last_executed_temp = round(abs(current_temp - self.last_executed_temp), 1)
 
-        if self.last_temp != current_temp:
-            self.last_temp_change = datetime.now()
-        self.last_temp = current_temp
-
         # Check if temperature difference is too small (only if updated by current temp change)
         #self.log(f"Attribute: {attribute} ")
         if attribute == "current_temperature":
-            time_difference = (current_time - self.last_temp_change).total_seconds()
-            self.log(f"Time difference: {time_difference}")
+            time_difference = int((datetime.now() - self.last_temp_change).total_seconds())
+            self.log(f"Time difference: {time_difference}s")
+
+            self.last_temp_change = datetime.now()
             if time_difference < self.trigger_timeout and difference_last_executed_temp < self.trigger_temp_diff:
                 self.log(f"Not updating valve position (temperature difference too small. Diff to last temp: {difference_last_executed_temp}. Required diff: {self.trigger_temp_diff})")
                 return
