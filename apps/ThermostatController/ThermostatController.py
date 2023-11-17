@@ -1,5 +1,5 @@
 import hassapi as hass
-import time
+from datetime import datetime
 
 class ThermostatController(hass.Hass):
     """
@@ -11,8 +11,8 @@ class ThermostatController(hass.Hass):
         self.log("Initializing ThermostatController..")
         self.last_temp = 0
         self.last_executed_temp = 0
-        self.last_execution_time = time.time()
-        self.last_temp_change = time.time()
+        self.last_execution_time = datetime.now()
+        self.last_temp_change = datetime.now()
         self.last_valve_position = None
 
         # Arguments
@@ -53,19 +53,17 @@ class ThermostatController(hass.Hass):
         hvac_mode = self.entity_thermostat.get_state()
         current_temp = self.entity_thermostat.get_state(attribute="current_temperature")
         target_temp = self.entity_thermostat.get_state(attribute="temperature")
-        current_time = time.time()
+        current_time = datetime.now()
         difference_last_executed_temp = round(abs(current_temp - self.last_executed_temp), 1)
 
         if self.last_temp != current_temp:
-            self.last_temp_change = time.time()
+            self.last_temp_change = datetime.now()
         self.last_temp = current_temp
 
         # Check if temperature difference is too small (only if updated by current temp change)
         #self.log(f"Attribute: {attribute} ")
         if attribute == "current_temperature":
-            time_difference = current_time - self.last_temp_change
-            # TODO time difference not working properly
-            #      Time difference: -2.2649765014648438e-05
+            time_difference = (current_time - self.last_temp_change).total_seconds()
             self.log(f"Time difference: {time_difference}")
             if time_difference < self.trigger_timeout and difference_last_executed_temp < self.trigger_temp_diff:
                 self.log(f"Not updating valve position (temperature difference too small. Diff to last temp: {difference_last_executed_temp}. Required diff: {self.trigger_temp_diff})")
