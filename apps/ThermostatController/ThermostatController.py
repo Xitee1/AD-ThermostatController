@@ -7,14 +7,8 @@ class ThermostatController(hass.Hass):
     """
 
     def initialize(self):
-        # Init
         self.log("Initializing ThermostatController..")
-        self.last_executed_temp = 0
-        self.last_execution_time = datetime.now()
-        self.last_temp_change = datetime.now()
-        self.last_valve_position = None
-
-        # Arguments
+        # Init arguments
         self.enabled = self.args['enabled']
         self.entity_thermostat = self.get_entity(self.args['entity_thermostat'])
         self.entity_valve_position = self.get_entity(self.args['entity_valve_position'])
@@ -26,7 +20,13 @@ class ThermostatController(hass.Hass):
         self.valve_compare_current_value = self.args['compare_current_value'] if 'compare_current_value' in self.args else True
         self.valve_always_update = self.args['always_update'] if 'force_update' in self.args else False
 
-        # App
+        # Init vars
+        self.last_executed_temp = 0
+        self.last_execution_time = datetime.now()
+        self.last_temp_change = datetime.now()
+        self.last_valve_position = None
+
+        # Load app
         if type(self.enabled) is bool and not self.enabled:
             self.log("ThermostatController instance is disabled.")
             return
