@@ -10,6 +10,7 @@ You can specify custom values to define by with temp difference to target how mu
 **Current state**: Working
 
 ### TODO:
+- Add description how to setup generic_thermostat
 - Check if all entities are available to prevent errors
 - Release on HACS
 
