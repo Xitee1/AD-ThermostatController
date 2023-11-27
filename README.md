@@ -10,20 +10,45 @@ You can specify custom values to define by with temp difference to target how mu
 **Current state**: Working
 
 ### TODO:
-- Add description how to setup generic_thermostat
 - Check if all entities are available to prevent errors
 - Release on HACS
 
 <br>
 
 ## App configuration
+### Preparing HA
+First, you need to create a Home Assistant generic_thermostat entity. This is used to set the temp of your thermostat (You can disable the climate entity provided by the thermostat integration).
+Change everything according to your room and situation.
+```yaml
+climate:
+  - platform: generic_thermostat
+    name: Living Room - Heater
+    unique_id: living_room_heater
+    heater: input_boolean.living_room_dummy_climate
+    target_sensor: sensor.living_room_temperature
+    min_temp: 15
+    max_temp: 30
+    cold_tolerance: 0.1
+    hot_tolerance: 0.0
+    # Optional. Define your presets & temp step.
+    away_temp: 21
+    comfort_temp: 24.5
+    home_temp: 24.0
+    sleep_temp: 23
+    target_temp_step: 0.5
+
+input_boolean:
+  living_room_dummy_climate:
+    name: Living room - dummy climate
+```
+
 ### Example
 ```yaml
 ThermostatController_living_room:
   module: ThermostatController
   class: ThermostatController
   enabled: True
-  entity_thermostat: climate.living_room_radiator
+  entity_thermostat: climate.living_room_heater
   entity_valve_position: number.living_room_radiator_valve_position
   update_interval: 120 # Update every 120 seconds instead listening for state changes of the climate entity.
   compare_current_value: True
