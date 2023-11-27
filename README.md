@@ -20,6 +20,7 @@ You can specify custom values to define by with temp difference to target how mu
 First, you need to create a Home Assistant generic_thermostat entity. This is used to set the temp of your thermostat (You can disable the climate entity provided by the thermostat integration).
 Change everything according to your room and situation.
 ```yaml
+# configuration.yaml
 climate:
   - platform: generic_thermostat
     name: Living Room - Heater
@@ -44,6 +45,7 @@ input_boolean:
 
 ### Example
 ```yaml
+# appdaemon/apps.yaml
 ThermostatController_living_room:
   module: ThermostatController
   class: ThermostatController
