@@ -1,6 +1,6 @@
 # AD-ThermostatController
 
-This app can control thermostats that are manually controllable like the Eurotronic Spirit or Comet.
+This app controls thermostats that are manually controllable like the Eurotronic Spirit or Comet.
 You can specify custom values to define by with temp difference to target how much it should open the valve.
 
 
@@ -17,8 +17,8 @@ You can specify custom values to define by with temp difference to target how mu
 
 ## App configuration
 ### Preparing HA
-First, you need to create a Home Assistant generic_thermostat entity. This is used to set the temp of your thermostat (You can disable the climate entity provided by the thermostat integration).
-Change everything according to your room and situation.
+First, you need to create a Home Assistant generic_thermostat entity. This is used to set the target temperature of your thermostat (You can disable the climate entity provided by the thermostat integration).
+Configure everything according to your room and situation.
 ```yaml
 # configuration.yaml
 climate:
@@ -43,7 +43,7 @@ input_boolean:
     name: Living room - dummy climate
 ```
 
-### Example
+### App (Example values)
 ```yaml
 # appdaemon/apps.yaml
 ThermostatController_living_room:
