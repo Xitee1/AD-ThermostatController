@@ -3,16 +3,6 @@
 This app controls thermostats that are manually controllable like the Eurotronic Spirit or Comet.
 You can specify custom values to define by with temp difference to target how much it should open the valve.
 
-
-<br>
-
-### Warning: This project is still under beta development! It should work but expect some bugs and that some things get changed.
-**Current state**: Working
-
-### TODO:
-- Check if all entities are available to prevent errors
-- Release on HACS
-
 <br>
 
 ## App configuration
