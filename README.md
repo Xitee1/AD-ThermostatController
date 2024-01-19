@@ -12,6 +12,7 @@ You can specify custom values to define by with temp difference to target how mu
 ### TODO:
 - Check if all entities are available to prevent errors
 - Release on HACS
+- Error handling for missing/wrong arguments
 
 <br>
 
