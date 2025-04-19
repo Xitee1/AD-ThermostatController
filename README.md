@@ -1,3 +1,8 @@
+> [!NOTE]
+> This AppDaemon app has been archived. Please use the new Home Assistant integration instead: https://github.com/Xitee1/ha-thermostat-valve-controller
+> 
+> It will be easier to use (setup through GUI, no more hacky use of generic_thermostat, etc...) and may support more features in the future.
+
 # AD-ThermostatController
 
 This app controls thermostats that are manually controllable like the Eurotronic Spirit or Comet.
